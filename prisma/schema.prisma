@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
     previewFeatures = ["jsonProtocol"]
 }
 
@@ -15,4 +15,26 @@ model Example {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+model WeighIn {
+    id                 String   @id @default(cuid())
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
+    date               DateTime @unique
+    weight             Decimal
+    weightProgress     Decimal
+    weightTotalChange  Decimal
+    weightToGoal       Decimal
+    bodyFatPercentage  Decimal?
+    bodyFatProgress    Decimal?
+    bodyFatTotalChange Decimal?
+    previousWeighInId  String?
+}
+
+model Goal {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+    weight    Decimal
 }
