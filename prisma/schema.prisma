@@ -30,6 +30,7 @@ model WeighIn {
     bodyFatProgress    Decimal?
     bodyFatTotalChange Decimal?
     previousWeighInId  String?
+    userid             String   @default("PHIL") //this would be replaced by auth eventually
 }
 
 model Goal {
@@ -37,4 +38,5 @@ model Goal {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now())
     weight    Decimal
+    userid    String   @unique @default("PHIL") //this would be replaced by auth eventually
 }

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-export const weighInRouter = createTRPCRouter({
+export const WeighInRouter = createTRPCRouter({
   create: publicProcedure
     .input(z.object({ date: z.date(), weight: z.number() }))
     .mutation(async ({ ctx, input }) => {
@@ -18,7 +18,19 @@ export const weighInRouter = createTRPCRouter({
       });
     }),
   readAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.weighIn.findMany();
+    return ctx.prisma.weighIn.findMany({
+      orderBy: {
+        date: "desc",
+      },
+      select: {
+        id: true,
+        date: true,
+        weight: true,
+        weightProgress: true,
+        weightTotalChange: true,
+        weightToGoal: true,
+      },
+    });
   }),
   readOne: publicProcedure
     .input(z.object({ id: z.string().cuid() }))
