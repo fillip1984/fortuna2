@@ -1,39 +1,31 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { GiBiceps } from "react-icons/gi";
 import { HiArrowLeft, HiPlus } from "react-icons/hi2";
-import {
-  IoCalendarClearSharp,
-  IoScaleSharp,
-  IoTrophySharp,
-} from "react-icons/io5";
+import { IoCalendarClearSharp, IoScaleSharp } from "react-icons/io5";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { type WeighIn } from "@prisma/client";
 import { api } from "~/utils/api";
+import Goal from "../weighIn/Goal";
 import { type NewItemDrawerProps } from "./BottomNav";
+import { Decimal } from "@prisma/client/runtime";
 
 export default function NewWeighIn({
   setDrawerForm,
   handleDrawerToggle,
 }: NewItemDrawerProps) {
-  const weighInSchema = z.object({
-    date: z.date(),
-    weight: z.number(),
-    bodyFatPercentage: z.number().optional(),
-  });
-  type WeighInSchemaType = z.infer<typeof weighInSchema>;
-
-  const goalSchema = z.object({
-    weight: z.number(),
-  });
-  type GoalSchemaType = z.infer<typeof goalSchema>;
+  // const weighInSchema = z.object({
+  //   date: z.date(),
+  //   weight: z.number(),
+  //   bodyFatPercentage: z.number().optional(),
+  // });
+  // type WeighInSchemaType = z.infer<typeof weighInSchema>;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<WeighInSchemaType>({
-    resolver: zodResolver(weighInSchema),
+  } = useForm<WeighIn>({
+    // resolver: zodResolver(weighInSchema),
   });
 
   const createWeighIn = api.weighIns.create.useMutation({
@@ -42,31 +34,14 @@ export default function NewWeighIn({
     },
   });
 
-  const onSubmit: SubmitHandler<WeighInSchemaType> = (formData) => {
+  const onSubmit: SubmitHandler<WeighIn> = (formData) => {
     createWeighIn.mutate({
       date: formData.date,
-      weight: formData.weight,
-      bodyFatPercentage: formData.bodyFatPercentage,
+      weight: Number(formData.weight.toString()),
+      bodyFatPercentage: formData.bodyFatPercentage
+        ? Number(formData.bodyFatPercentage?.toString())
+        : undefined,
     });
-  };
-
-  const { data: goal } = api.goals.read.useQuery();
-
-  const {
-    register: goalRegister,
-    handleSubmit: goalHandleSubmit,
-    formState: { errors: goalErrors },
-  } = useForm<GoalSchemaType>({
-    resolver: zodResolver(goalSchema),
-  });
-
-  const createGoal = api.goals.createOrUpdateGoal.useMutation({
-    onSuccess: () => {
-      console.log("worked");
-    },
-  });
-  const goalOnSubmit: SubmitHandler<GoalSchemaType> = (goalFormData) => {
-    createGoal.mutate(goalFormData);
   };
 
   return (
@@ -105,7 +80,7 @@ export default function NewWeighIn({
               placeholder="192.2"
               className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
               {...register("weight", {
-                setValueAs: (v: string) => (v === "" ? undefined : parseInt(v)),
+                valueAsNumber: true,
               })}
             />
           </label>
@@ -153,36 +128,7 @@ export default function NewWeighIn({
         </div>
       </form>
 
-      <form
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={goalHandleSubmit(goalOnSubmit)}
-        className="my-12 rounded border-2 border-slate-400 px-4 py-2"
-      >
-        <h4>Goal</h4>
-        <p className="text-sm">Set a weight goal</p>
-        <div className="">
-          <label className="relative block text-gray-400 focus-within:text-gray-600">
-            <IoTrophySharp className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
-            <input
-              type="number"
-              inputMode="decimal"
-              placeholder="175"
-              step={0.01}
-              className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
-              {...goalRegister("weight", { valueAsNumber: true })}
-              defaultValue={goal?.weight.toString()}
-            />
-          </label>
-          {goalErrors.weight && (
-            <span className="block text-red-300">
-              {goalErrors.weight.message}
-            </span>
-          )}
-          <button type="submit" className="mt-2 bg-red-500 px-2 py-1">
-            Update
-          </button>
-        </div>
-      </form>
+      <Goal />
     </div>
   );
 }

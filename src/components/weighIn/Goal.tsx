@@ -9,14 +9,23 @@ export default function Goal() {
   const { data: goal } = api.goals.getGoal.useQuery();
   const createOrUpdateWeightGoal = api.goals.createOrUpdateGoal.useMutation();
 
+  // const goalSchema = z.object({
+  //   weight: z.number(),
+  // });
+  // type GoalSchemaType = z.infer<typeof goalSchema>;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Goal>();
+  } = useForm<Goal>({
+    // resolver: zodResolver(GoalSchemaType),
+  });
 
   const goalOnSubmit: SubmitHandler<Goal> = (goalFormData) => {
-    createOrUpdateWeightGoal.mutate({ weight: goalFormData.weight.toNumber() });
+    createOrUpdateWeightGoal.mutate({
+      weight: Number(goalFormData.weight.toString()),
+    });
   };
 
   return (
@@ -39,7 +48,7 @@ export default function Goal() {
                 placeholder="175"
                 step={0.01}
                 className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
-                {...register("weight", { valueAsNumber: true })}
+                {...register("weight")}
                 defaultValue={goal?.weight?.toString()}
               />
             </label>
