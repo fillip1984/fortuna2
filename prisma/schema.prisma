@@ -7,14 +7,8 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
-}
-
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
 }
 
 model WeighIn {
@@ -36,7 +30,30 @@ model WeighIn {
 model Goal {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
-    updatedAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
     weight    Decimal
     userid    String   @unique @default("PHIL") //this would be replaced by auth eventually
+}
+
+model BloodPressureReading {
+    id              String                @id @default(cuid())
+    createdAt       DateTime              @default(now())
+    updatedAt       DateTime              @updatedAt
+    date            DateTime              @unique
+    systolic        Int
+    diastolic       Int
+    pulse           Int?
+    systolicChange  Int
+    diastolicChange Int
+    pulseChange     Int?
+    category        BloodPressureCategory
+}
+
+enum BloodPressureCategory {
+    LOW
+    NORMAL
+    ELEVATED
+    HYPERTENSION_STAGE_1
+    HYPERTENSION_STAGE_2
+    HYPERTENSION_CRISIS
 }

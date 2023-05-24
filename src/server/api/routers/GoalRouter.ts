@@ -20,4 +20,7 @@ export const GoalRouter = createTRPCRouter({
   read: publicProcedure.query(async ({ ctx }) => {
     return ctx.prisma.goal.findFirst();
   }),
+  getGoal: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.goal.findFirst();
+  }),
 });

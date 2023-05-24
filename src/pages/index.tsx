@@ -9,7 +9,7 @@ const Home: NextPage = () => {
       <Head>
         <title>fortuna</title>
         <meta
-          name="description"
+          name="fortuna"
           content="Fortuna app which tracks things of interest"
         />
         <link rel="icon" href="/favicon.ico" />
