@@ -7,7 +7,6 @@ import { type WeighIn } from "@prisma/client";
 import { api } from "~/utils/api";
 import Goal from "../weighIn/Goal";
 import { type NewItemDrawerProps } from "./BottomNav";
-import { Decimal } from "@prisma/client/runtime";
 
 export default function NewWeighIn({
   setDrawerForm,
@@ -28,8 +27,10 @@ export default function NewWeighIn({
     // resolver: zodResolver(weighInSchema),
   });
 
+  const utils = api.useContext();
   const createWeighIn = api.weighIns.create.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
+      await utils.weighIns.invalidate();
       handleDrawerToggle();
     },
   });
