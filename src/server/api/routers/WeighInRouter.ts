@@ -55,7 +55,7 @@ export const WeighInRouter = createTRPCRouter({
         weightToGoal = (input.weight - goalWeight).toFixed(2);
       }
 
-      await ctx.prisma.weighIn.create({
+      const result = await ctx.prisma.weighIn.create({
         data: {
           date: input.date,
           weight: input.weight,
@@ -66,6 +66,7 @@ export const WeighInRouter = createTRPCRouter({
           previousWeighInId: previousWeighIn?.id,
         },
       });
+      return result;
     }),
   readAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.weighIn.findMany({

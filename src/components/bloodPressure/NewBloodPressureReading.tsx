@@ -1,47 +1,44 @@
+// import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { type BloodPressureReading } from "@prisma/client";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { GiBiceps } from "react-icons/gi";
+import { BsHeartPulseFill } from "react-icons/bs";
+import { GiHearts, GiNestedHearts } from "react-icons/gi";
 import { HiArrowLeft, HiPlus } from "react-icons/hi2";
-import { IoCalendarClearSharp, IoScaleSharp } from "react-icons/io5";
-
-import { type WeighIn } from "@prisma/client";
+import { IoCalendarClearSharp } from "react-icons/io5";
 import { api } from "~/utils/api";
-import Goal from "../weighIn/Goal";
-import { type NewItemDrawerProps } from "./BottomNav";
+import { type DrawerFormOptions } from "../nav/BottomNav";
 
-export default function NewWeighIn({
+interface NewRoutineProps {
+  setDrawerForm: React.Dispatch<React.SetStateAction<DrawerFormOptions>>;
+  handleDrawerToggle: () => void;
+}
+
+/** renders new routine on drawer */
+export default function NewBloodPressureReading({
   setDrawerForm,
   handleDrawerToggle,
-}: NewItemDrawerProps) {
-  // const weighInSchema = z.object({
-  //   date: z.date(),
-  //   weight: z.number(),
-  //   bodyFatPercentage: z.number().optional(),
-  // });
-  // type WeighInSchemaType = z.infer<typeof weighInSchema>;
-
+}: NewRoutineProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<WeighIn>({
-    // resolver: zodResolver(weighInSchema),
-  });
+  } = useForm<BloodPressureReading>();
 
   const utils = api.useContext();
-  const createWeighIn = api.weighIns.create.useMutation({
-    onSuccess: async () => {
-      await utils.weighIns.invalidate();
-      handleDrawerToggle();
-    },
-  });
+  const createBloodPressureReading =
+    api.bloodPressureReadings.create.useMutation({
+      onSuccess: async () => {
+        await utils.bloodPressureReadings.invalidate();
+        handleDrawerToggle();
+      },
+    });
 
-  const onSubmit: SubmitHandler<WeighIn> = (formData) => {
-    createWeighIn.mutate({
+  const onSubmit: SubmitHandler<BloodPressureReading> = (formData) => {
+    createBloodPressureReading.mutate({
       date: formData.date,
-      weight: Number(formData.weight.toString()),
-      bodyFatPercentage: formData.bodyFatPercentage
-        ? Number(formData.bodyFatPercentage?.toString())
-        : undefined,
+      systolic: formData.systolic,
+      diastolic: formData.diastolic,
+      pulse: formData.pulse ? formData.pulse : undefined,
     });
   };
 
@@ -74,40 +71,57 @@ export default function NewWeighIn({
         {/*  TODO: couldn't figure out how to require decimal only, you can type in letters and I can't stop it! */}
         <div>
           <label className="relative block text-gray-400 focus-within:text-gray-600">
-            <IoScaleSharp className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
+            <GiHearts className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
             <input
               type="number"
-              inputMode="decimal"
-              placeholder="192.2"
+              inputMode="numeric"
+              placeholder="120 Systolic/upper number (mmHg)"
               className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
-              {...register("weight", {
+              {...register("systolic", {
+                required: "Field is required",
                 valueAsNumber: true,
               })}
             />
           </label>
-          {errors.weight && (
-            <span className="text-red-300">{errors.weight.message}</span>
+          {errors.systolic && (
+            <span className="text-red-300">{errors.systolic.message}</span>
+          )}
+        </div>
+
+        {/*  TODO: couldn't figure out how to require decimal only, you can type in letters and I can't stop it! */}
+        <div>
+          <label className="relative block text-gray-400 focus-within:text-gray-600">
+            <GiNestedHearts className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
+            <input
+              type="number"
+              inputMode="numeric"
+              placeholder="80 Diastolic/lower number (mmHg)"
+              className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
+              {...register("diastolic", {
+                required: "Field is required",
+                valueAsNumber: true,
+              })}
+            />
+          </label>
+          {errors.diastolic && (
+            <span className="text-red-300">{errors.diastolic.message}</span>
           )}
         </div>
 
         <div>
           <label className="relative block text-gray-400 focus-within:text-gray-600">
-            <GiBiceps className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
+            <BsHeartPulseFill className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
             <input
               type="number"
-              inputMode="decimal"
-              placeholder="24.2"
+              inputMode="numeric"
+              placeholder="70 Pulse (BPM)"
               className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
-              {...register("bodyFatPercentage", {
-                setValueAs: (v: string) => (v === "" ? undefined : parseInt(v)),
-              })}
+              {...register("pulse", { valueAsNumber: true })}
             />
           </label>
-          <span className="font-mono text-xs">Body Fat % (optional)</span>
-          {errors.bodyFatPercentage && (
-            <span className="block text-red-300">
-              {errors.bodyFatPercentage.message}
-            </span>
+          <span className="font-mono text-xs">Pulse (optional)</span>
+          {errors.pulse && (
+            <span className="block text-red-300">{errors.pulse.message}</span>
           )}
         </div>
 
@@ -128,8 +142,6 @@ export default function NewWeighIn({
           </button>
         </div>
       </form>
-
-      <Goal />
     </div>
   );
 }

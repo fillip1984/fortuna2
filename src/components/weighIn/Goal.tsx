@@ -1,5 +1,3 @@
-"use client";
-
 import { type Goal } from "@prisma/client";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { IoTrophySharp } from "react-icons/io5";

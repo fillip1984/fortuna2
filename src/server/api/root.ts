@@ -1,6 +1,8 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { GoalRouter } from "./routers/GoalRouter";
 import { WeighInRouter } from "./routers/WeighInRouter";
+import { TimelineRouter } from "./routers/TimelineRouter";
+import { BloodPressureReadingRouter } from "./routers/BloodPressureReadingRouter";
 
 /**
  * This is the primary router for your server.
@@ -8,7 +10,9 @@ import { WeighInRouter } from "./routers/WeighInRouter";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  bloodPressureReadings: BloodPressureReadingRouter,
   goals: GoalRouter,
+  timeline: TimelineRouter,
   weighIns: WeighInRouter,
 });
 

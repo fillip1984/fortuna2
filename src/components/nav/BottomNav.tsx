@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 
 import {
@@ -10,9 +8,9 @@ import {
 import { IoScaleOutline } from "react-icons/io5";
 import { MdOutlineBloodtype } from "react-icons/md";
 
-import NewBloodPressureReading from "./NewBloodPressureReading";
-import NewRoutine from "./NewRoutine";
-import NewWeighIn from "./NewWeighIn";
+import NewBloodPressureReading from "../bloodPressure/NewBloodPressureReading";
+import NewWeighIn from "../weighIn/NewWeighIn";
+import NewRoutine from "../routine/NewRoutine";
 
 export type DrawerFormOptions =
   | "Selector"

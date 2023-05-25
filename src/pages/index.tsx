@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import WeighInList from "~/components/WeighInList";
+import Timeline from "~/components/Timeline";
 import BottomNav from "~/components/nav/BottomNav";
 
 const Home: NextPage = () => {
@@ -14,8 +14,8 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="h-screen w-screen p-4">
-        <WeighInList />
+      <main className="mb-[500px] w-screen p-4">
+        <Timeline />
         <BottomNav />
       </main>
     </>

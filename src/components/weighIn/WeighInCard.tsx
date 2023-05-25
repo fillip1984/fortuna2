@@ -5,15 +5,19 @@ import { GiStairsGoal } from "react-icons/gi";
 import { IoScaleOutline } from "react-icons/io5";
 import { MdTrendingDown, MdTrendingFlat, MdTrendingUp } from "react-icons/md";
 
-const determineWeighInTrend = (weight: number) => {
-  if (weight === 0) {
+const determineWeighInTrend = (numberAsString: string) => {
+  const number = parseInt(numberAsString);
+
+  if (number === 0) {
     return <MdTrendingFlat />;
-  } else if (weight > 0) {
+  } else if (number > 0) {
     return <MdTrendingUp />;
-  } else if (weight < 0) {
+  } else if (number < 0) {
     return <MdTrendingDown />;
   } else {
-    throw Error(`Unable to determine trend for: ${weight}`);
+    throw Error(
+      "Unable to determine trend for number as a string: " + numberAsString
+    );
   }
 };
 
@@ -22,7 +26,7 @@ export default function WeighInCard({
   goalWeight,
 }: {
   weighIn: WeighIn;
-  goalWeight: number | undefined;
+  goalWeight: string | undefined;
 }) {
   return (
     <Link
@@ -37,32 +41,24 @@ export default function WeighInCard({
       <div className="flex flex-1 justify-between bg-gray-100 p-4">
         <span className="flex flex-col items-center text-3xl">
           <span className="text-xs uppercase text-gray-500">Weight</span>
-          {weighIn.weight.toNumber()}
+          {weighIn.weight.toString()}
           <span className="flex items-center gap-2 text-xs text-gray-500">
             <IoScaleOutline /> lbs
           </span>
         </span>
         <span className="flex flex-col items-center text-xl">
           <span className="text-xs uppercase text-gray-500">To Date</span>
-          {weighIn.weightProgress.toNumber()}
-          {determineWeighInTrend(weighIn.weightProgress.toNumber())}
-          {/* {weighIn.weightProgress.isPositive() &&
-                  !weighIn.weightProgress.isZero() && <MdTrendingUp />}
-                {weighIn.weightProgress.isZero() && <MdTrendingFlat />}
-                {weighIn.weightProgress.isNegative() && <MdTrendingDown />} */}
+          {weighIn.weightProgress.toString()}
+          {determineWeighInTrend(weighIn.weightProgress.toString())}
         </span>
         <span className="flex flex-col items-center text-xl">
           <span className="text-xs uppercase text-gray-500">Total</span>
-          {weighIn.weightTotalChange.toNumber()}
-          {determineWeighInTrend(weighIn.weightTotalChange.toNumber())}
-          {/* {weighIn.weightTotalChange.isPositive() &&
-                  !weighIn.weightTotalChange.isZero() && <MdTrendingUp />}
-                {weighIn.weightTotalChange.isZero() && <MdTrendingFlat />}
-                {weighIn.weightTotalChange.isNegative() && <MdTrendingDown />} */}
+          {weighIn.weightTotalChange.toString()}
+          {determineWeighInTrend(weighIn.weightTotalChange.toString())}
         </span>
         <span className="flex flex-col items-center text-3xl">
           <span className="text-xs uppercase text-gray-500">To Goal</span>
-          {weighIn.weightToGoal.toNumber()}
+          {weighIn.weightToGoal.toString()}
           <span className="flex items-center gap-2 text-xs text-gray-500">
             <GiStairsGoal />
             {goalWeight} lbs
