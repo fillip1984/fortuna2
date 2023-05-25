@@ -30,7 +30,7 @@ export default function NewWeighIn({
   const utils = api.useContext();
   const createWeighIn = api.weighIns.create.useMutation({
     onSuccess: async () => {
-      await utils.weighIns.invalidate();
+      await utils.timeline.invalidate();
       handleDrawerToggle();
     },
   });

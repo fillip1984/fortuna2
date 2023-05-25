@@ -28,7 +28,7 @@ export default function NewBloodPressureReading({
   const createBloodPressureReading =
     api.bloodPressureReadings.create.useMutation({
       onSuccess: async () => {
-        await utils.bloodPressureReadings.invalidate();
+        await utils.timeline.invalidate();
         handleDrawerToggle();
       },
     });
