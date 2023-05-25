@@ -5,9 +5,7 @@ import { GiStairsGoal } from "react-icons/gi";
 import { IoScaleOutline } from "react-icons/io5";
 import { MdTrendingDown, MdTrendingFlat, MdTrendingUp } from "react-icons/md";
 
-const determineWeighInTrend = (numberAsString: string) => {
-  const number = parseInt(numberAsString);
-
+const determineWeighInTrend = (number: number) => {
   if (number === 0) {
     return <MdTrendingFlat />;
   } else if (number > 0) {
@@ -15,9 +13,7 @@ const determineWeighInTrend = (numberAsString: string) => {
   } else if (number < 0) {
     return <MdTrendingDown />;
   } else {
-    throw Error(
-      "Unable to determine trend for number as a string: " + numberAsString
-    );
+    throw Error("Unable to determine trend for number: " + number.toString());
   }
 };
 
@@ -41,24 +37,24 @@ export default function WeighInCard({
       <div className="flex flex-1 justify-between bg-gray-100 p-4">
         <span className="flex flex-col items-center text-3xl">
           <span className="text-xs uppercase text-gray-500">Weight</span>
-          {weighIn.weight.toString()}
+          {weighIn.weight.toNumber()}
           <span className="flex items-center gap-2 text-xs text-gray-500">
             <IoScaleOutline /> lbs
           </span>
         </span>
         <span className="flex flex-col items-center text-xl">
           <span className="text-xs uppercase text-gray-500">To Date</span>
-          {weighIn.weightProgress.toString()}
-          {determineWeighInTrend(weighIn.weightProgress.toString())}
+          {weighIn.weightProgress.toNumber()}
+          {determineWeighInTrend(weighIn.weightProgress.toNumber())}
         </span>
         <span className="flex flex-col items-center text-xl">
           <span className="text-xs uppercase text-gray-500">Total</span>
-          {weighIn.weightTotalChange.toString()}
-          {determineWeighInTrend(weighIn.weightTotalChange.toString())}
+          {weighIn.weightTotalChange.toNumber()}
+          {determineWeighInTrend(weighIn.weightTotalChange.toNumber())}
         </span>
         <span className="flex flex-col items-center text-3xl">
           <span className="text-xs uppercase text-gray-500">To Goal</span>
-          {weighIn.weightToGoal.toString()}
+          {weighIn.weightToGoal.toNumber()}
           <span className="flex items-center gap-2 text-xs text-gray-500">
             <GiStairsGoal />
             {goalWeight} lbs

@@ -57,6 +57,18 @@ import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
+// TODO: still trying to decide if this belongs here or in utils/api.ts???? If it does belong here do we need to define both serialize and deserialize?
+// See: https://github.com/blitz-js/superjson#decimaljs--prismadecimal
+// it's magic --> https://media0.giphy.com/media/12NUbkX6p4xOO4/giphy.gif?cid=ecf05e47w4hhytvna8qglzzqrfne5nqkqu1pm5bfl81xqfa5&ep=v1_gifs_search&rid=giphy.gif&ct=g
+// superjson.registerCustom<Decimal, string>(
+//   {
+//     isApplicable: (v): v is Decimal => Decimal.isDecimal(v),
+//     serialize: (v) => v.toJSON(),
+//     deserialize: (v) => new Decimal(v),
+//   },
+//   "decimal.js"
+// );
+
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
