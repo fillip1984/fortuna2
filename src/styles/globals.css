@@ -30,4 +30,10 @@
   input:read-only {
     @apply cursor-not-allowed;
   }
+
+  input,
+  select,
+  textarea {
+    @apply text-black;
+  }
 }

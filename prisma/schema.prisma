@@ -57,3 +57,46 @@ enum BloodPressureCategory {
     HYPERTENSION_STAGE_2
     HYPERTENSION_CRISIS
 }
+
+model Routine {
+    id             String          @id @default(cuid())
+    createdAt      DateTime        @default(now())
+    updatedAt      DateTime        @updatedAt
+    summary        String
+    details        String
+    occurrenceType OccurrenceType
+    daysOfWeek     DaySelector[]
+    dayOfMonth     DayOfMonthType?
+    startDateTime  DateTime
+    endDateTime    DateTime?
+}
+
+model DaySelector {
+    id               String   @id @default(cuid())
+    createdAt        DateTime @default(now())
+    updatedAt        DateTime @updatedAt
+    label            String
+    abbreviatedLabel String
+    selected         Boolean
+    Routine          Routine? @relation(fields: [routineId], references: [id])
+    routineId        String?
+}
+
+enum OccurrenceType {
+    DAY_OF_WEEK
+    DAY_OF_MONTH
+    SPECIFIC_DAY
+}
+
+enum EventStatus {
+    NOT_COMPLETE
+    SKIPPED
+    COMPLETE
+    OVERDUE
+}
+
+enum DayOfMonthType {
+    FIRST
+    MIDDLE
+    LAST
+}
