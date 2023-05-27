@@ -78,16 +78,14 @@ export default function NewRoutine({
       <div className="flex justify-between">
         <button
           className="flex items-center gap-1 rounded border-2 border-black px-4 py-2 text-xl"
-          onClick={() => setDrawerForm("Selector")}
-        >
+          onClick={() => setDrawerForm("Selector")}>
           <HiArrowLeft />
           Back
         </button>
         <button
           type="submit"
           form="new-routine-form"
-          className="flex items-center gap-1 rounded bg-black px-4 py-2 text-2xl text-white"
-        >
+          className="flex items-center gap-1 rounded bg-black px-4 py-2 text-2xl text-white">
           Save
           <HiPlus />
         </button>

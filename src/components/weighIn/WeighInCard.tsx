@@ -28,8 +28,7 @@ export default function WeighInCard({
     <Link
       href={`/weighIns/${weighIn.id}`}
       key={weighIn.id}
-      className="my-2 flex flex-col rounded-lg"
-    >
+      className="my-2 flex flex-col rounded-lg">
       <div className="flex items-center gap-2 rounded-t-lg bg-red-500 p-2 text-white">
         <IoScaleOutline />
         <div className="flex flex-1 items-center justify-center gap-2">

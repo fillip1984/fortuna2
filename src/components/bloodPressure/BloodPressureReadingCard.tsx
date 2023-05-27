@@ -20,8 +20,7 @@ export default function BloodPressureReadingCard({
     <Link
       href={`/bloodPressureReadings/${bloodPressureReading.id}`}
       key={bloodPressureReading.id}
-      className="my-2 flex flex-col rounded-lg"
-    >
+      className="my-2 flex flex-col rounded-lg">
       <div className="flex items-center rounded-t-lg bg-red-500 p-2 text-white">
         <GiHearts />
         <div className="flex flex-1 items-center justify-center gap-2">
@@ -137,8 +136,7 @@ const BloodPressureCategoryButton = ({
   return (
     <button
       onClick={openNewWindow}
-      className="flex items-center gap-2 rounded-lg border-2 border-gray-200 p-2 hover:border-gray-300"
-    >
+      className="flex items-center gap-2 rounded-lg border-2 border-gray-200 p-2 hover:border-gray-300">
       <BsFillCircleFill className={`${colorSelector()} text-sm`} />
       <span className={`${colorSelector()} text-xs`}>
         {translateCategory()}

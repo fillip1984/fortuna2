@@ -67,8 +67,7 @@ export default function BottomNav() {
     <>
       <div
         id="navbar"
-        className="fixed bottom-0 left-0 right-0 flex items-center justify-around bg-black py-2"
-      >
+        className="fixed bottom-0 left-0 right-0 flex items-center justify-around bg-black py-2">
         <button onClick={handleDrawerToggle}>
           <HiChevronDoubleUp className="text-6xl text-red-400" />
         </button>
@@ -78,8 +77,7 @@ export default function BottomNav() {
         id="bottom-drawer"
         className={`fixed bottom-0 left-0 right-0 z-50 rounded-t bg-zinc-800 text-white transition-all duration-200 ${
           drawerOpen ? "h-full" : "h-0"
-        }`}
-      >
+        }`}>
         <div id="drawer-controls" className="mt-2 flex justify-center text-6xl">
           <button type="button" onClick={handleDrawerToggle}>
             <HiChevronDown />
@@ -92,8 +90,7 @@ export default function BottomNav() {
                 type="button"
                 key={index}
                 className="flex h-32 w-32 flex-col items-center justify-center rounded-lg border border-white p-2"
-                onClick={navItem.action}
-              >
+                onClick={navItem.action}>
                 <span className="text-4xl">{navItem.icon}</span>
                 <span className="text-xs">{navItem.label}</span>
               </button>

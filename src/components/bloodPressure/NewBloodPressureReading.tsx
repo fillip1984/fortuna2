@@ -48,8 +48,7 @@ export default function NewBloodPressureReading({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
-        noValidate
-      >
+        noValidate>
         <div>
           <label className="relative block text-gray-400 focus-within:text-gray-600">
             <IoCalendarClearSharp className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
@@ -128,15 +127,13 @@ export default function NewBloodPressureReading({
         <div className="fixed bottom-0 left-0 right-0 flex justify-between p-4">
           <button
             className="flex items-center gap-1 rounded border-2 border-black px-4 py-2 text-xl"
-            onClick={() => setDrawerForm("Selector")}
-          >
+            onClick={() => setDrawerForm("Selector")}>
             <HiArrowLeft />
             Back
           </button>
           <button
             type="submit"
-            className="flex items-center gap-1 rounded bg-red-600 px-4 py-2 text-2xl text-white"
-          >
+            className="flex items-center gap-1 rounded bg-red-600 px-4 py-2 text-2xl text-white">
             Save
             <HiPlus />
           </button>

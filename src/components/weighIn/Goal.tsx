@@ -32,8 +32,7 @@ export default function Goal() {
         <form
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={handleSubmit(goalOnSubmit)}
-          className="my-12 rounded border-2 border-slate-400 px-4 py-2"
-        >
+          className="my-12 rounded border-2 border-slate-400 px-4 py-2">
           <input type="hidden" {...register("id")} defaultValue={goal?.id} />
           <h4>Goal</h4>
           <p className="text-sm">Set a weight goal</p>

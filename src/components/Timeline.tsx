@@ -14,8 +14,7 @@ const Timeline = () => {
         {timeline?.map((timelineEvent) => (
           <div
             className="my-4 text-center text-2xl"
-            key={timelineEvent.date.getTime()}
-          >
+            key={timelineEvent.date.getTime()}>
             <div className="sticky top-0 -mx-4 bg-zinc-700 p-4">
               <h3>{timelineEvent.date.toISOString().substring(0, 10)}</h3>
             </div>

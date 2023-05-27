@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Timeline from "~/components/Timeline";
-import BottomNav from "~/components/nav/BottomNav";
 
 const Home: NextPage = () => {
   return (
@@ -16,7 +15,6 @@ const Home: NextPage = () => {
       </Head>
       <main className="mb-[500px]">
         <Timeline />
-        <BottomNav />
       </main>
     </>
   );

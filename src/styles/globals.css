@@ -23,7 +23,11 @@
     @apply text-xl;
   }
 
-  bod {
+  body {
     @apply bg-zinc-800 p-4 text-white;
+  }
+
+  input:read-only {
+    @apply cursor-not-allowed;
   }
 }
