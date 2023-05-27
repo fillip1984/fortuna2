@@ -14,7 +14,7 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="mb-[500px] w-screen p-4">
+      <main className="mb-[500px]">
         <Timeline />
         <BottomNav />
       </main>

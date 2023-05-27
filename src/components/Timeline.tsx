@@ -16,7 +16,7 @@ const Timeline = () => {
             className="my-4 text-center text-2xl"
             key={timelineEvent.date.getTime()}
           >
-            <div className="sticky top-0 -mx-4 bg-slate-200 p-4">
+            <div className="sticky top-0 -mx-4 bg-zinc-700 p-4">
               <h3>{timelineEvent.date.toISOString().substring(0, 10)}</h3>
             </div>
             <div className="flex flex-col">

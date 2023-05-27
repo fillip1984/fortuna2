@@ -22,4 +22,8 @@
   h5 {
     @apply text-xl;
   }
+
+  bod {
+    @apply bg-zinc-800 p-4 text-white;
+  }
 }

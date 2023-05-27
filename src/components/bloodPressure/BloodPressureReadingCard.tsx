@@ -20,17 +20,20 @@ export default function BloodPressureReadingCard({
     <Link
       href={`/bloodPressureReadings/${bloodPressureReading.id}`}
       key={bloodPressureReading.id}
-      className="my-2 flex flex-col rounded-lg border-2"
+      className="my-2 flex flex-col rounded-lg"
     >
-      <div className="flex items-center justify-center gap-2 bg-gray-100 p-1">
-        <BsCalendarEvent />
-        {bloodPressureReading.date.toISOString().substring(0, 10)}
+      <div className="flex items-center rounded-t-lg bg-red-500 p-2 text-white">
+        <GiHearts />
+        <div className="flex flex-1 items-center justify-center gap-2">
+          <BsCalendarEvent />
+          {bloodPressureReading.date.toISOString().substring(0, 10)}
+        </div>
       </div>
-      <div className="flex justify-between bg-gray-100 p-4">
+      <div className="flex justify-between bg-gray-200 p-4 text-black">
         <span className="flex flex-col items-center text-3xl">
           <span className="text-xs uppercase text-gray-500">
             Systolic{" "}
-            <span className="text-xs uppercase text-gray-400">(previous)</span>
+            <span className="text-xs uppercase text-gray-400">(change)</span>
           </span>
           <span className="flex items-center gap-1">
             {bloodPressureReading.systolic}
@@ -45,7 +48,7 @@ export default function BloodPressureReadingCard({
         <span className="flex flex-col items-center text-3xl">
           <span className="text-xs uppercase text-gray-500">
             Diastolic{" "}
-            <span className="text-xs uppercase text-gray-400">(previous)</span>
+            <span className="text-xs uppercase text-gray-400">(change)</span>
           </span>
           <span className="flex items-center gap-1">
             {bloodPressureReading.diastolic}
@@ -60,7 +63,7 @@ export default function BloodPressureReadingCard({
         <span className="flex flex-col items-center text-3xl">
           <span className="text-xs uppercase text-gray-500">
             Pulse{" "}
-            <span className="text-xs uppercase text-gray-400">(previous)</span>
+            <span className="text-xs uppercase text-gray-400">(change)</span>
           </span>
           <span className="flex items-center gap-1">
             {bloodPressureReading.pulse ?? "N/A"}
@@ -74,7 +77,7 @@ export default function BloodPressureReadingCard({
           </span>
         </span>
       </div>
-      <div className="flex items-center justify-center gap-2 bg-gray-100 p-2 text-3xl">
+      <div className="flex items-center justify-center gap-2 bg-gray-200 p-2 text-3xl">
         <BloodPressureCategoryButton
           bloodPressureCategory={bloodPressureReading.category}
         />
