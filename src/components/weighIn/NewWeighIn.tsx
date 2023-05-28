@@ -7,7 +7,7 @@ import { type WeighIn } from "@prisma/client";
 import { api } from "~/utils/api";
 import Goal from "./Goal";
 import { type NewItemDrawerProps } from "../nav/BottomNav";
-import { startOfDay } from "~/utils/date";
+import { startOfDay } from "date-fns";
 
 export default function NewWeighIn({
   setDrawerForm,

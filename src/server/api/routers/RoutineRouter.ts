@@ -1,7 +1,7 @@
 import { OccurrenceType } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { startOfDay } from "~/utils/date";
+import { startOfDay } from "date-fns";
 
 export const RoutineRouter = createTRPCRouter({
   create: publicProcedure
@@ -28,7 +28,7 @@ export const RoutineRouter = createTRPCRouter({
           summary: input.summary,
           details: input.details,
           occurrenceType: input.occurrenceType,
-          startDateTime: startOfDay(new Date()),
+          startDateTime: input.startDateTime,
           endDateTime: input.endDateTime,
           daysOfWeek: {
             ...(input.daysOfWeek
@@ -54,7 +54,6 @@ export const RoutineRouter = createTRPCRouter({
   }),
   readForToday: publicProcedure.query(({ ctx }) => {
     const today = startOfDay(new Date());
-    // does the same thing: today.setHours(0, 0, 0, 0);
 
     return ctx.prisma.routine.findMany({
       where: {

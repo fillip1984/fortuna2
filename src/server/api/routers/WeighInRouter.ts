@@ -1,9 +1,9 @@
 import { type WeighIn } from "@prisma/client";
+import { differenceInCalendarDays } from "date-fns";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
-import { differenceInCalendarDays } from "~/utils/date";
 
 type WeighInDateDiffed = {
   daysBetween: number;

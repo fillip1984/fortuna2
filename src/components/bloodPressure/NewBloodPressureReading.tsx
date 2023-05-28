@@ -7,7 +7,7 @@ import { HiArrowLeft, HiPlus } from "react-icons/hi2";
 import { IoCalendarClearSharp } from "react-icons/io5";
 import { api } from "~/utils/api";
 import { type DrawerFormOptions } from "../nav/BottomNav";
-import { startOfDay } from "~/utils/date";
+import { startOfDay } from "date-fns";
 
 interface NewRoutineProps {
   setDrawerForm: React.Dispatch<React.SetStateAction<DrawerFormOptions>>;

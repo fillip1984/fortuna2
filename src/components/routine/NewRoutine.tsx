@@ -3,7 +3,7 @@ import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
 import { HiArrowLeft, HiPlus } from "react-icons/hi2";
 import { api } from "~/utils/api";
 import { type DrawerFormOptions } from "../nav/BottomNav";
-import { startOfDay } from "~/utils/date";
+import { startOfDay } from "date-fns";
 
 interface NewRoutineProps {
   setDrawerForm: React.Dispatch<React.SetStateAction<DrawerFormOptions>>;
