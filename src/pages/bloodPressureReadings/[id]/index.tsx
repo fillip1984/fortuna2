@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { BsHeartPulseFill } from "react-icons/bs";
 import { GiHearts, GiNestedHearts } from "react-icons/gi";
-import { HiArrowLeft, HiOutlineTrash, HiPlus } from "react-icons/hi2";
+import { HiArrowLeft, HiOutlineTrash } from "react-icons/hi2";
 import { IoCalendarClearSharp } from "react-icons/io5";
 import { api } from "~/utils/api";
 

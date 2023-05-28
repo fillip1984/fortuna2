@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GiBiceps } from "react-icons/gi";
-import { HiArrowLeft, HiOutlineTrash, HiPlus } from "react-icons/hi2";
+import { HiArrowLeft, HiOutlineTrash } from "react-icons/hi2";
 import { IoCalendarClearSharp, IoScaleSharp } from "react-icons/io5";
 import { api } from "~/utils/api";
 

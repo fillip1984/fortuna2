@@ -1,12 +1,18 @@
-import { type Routine } from "@prisma/client";
+import { type DaySelector, type Routine } from "@prisma/client";
 import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
 import { HiArrowLeft, HiPlus } from "react-icons/hi2";
 import { api } from "~/utils/api";
 import { type DrawerFormOptions } from "../nav/BottomNav";
+import { startOfDay } from "~/utils/date";
 
 interface NewRoutineProps {
   setDrawerForm: React.Dispatch<React.SetStateAction<DrawerFormOptions>>;
   handleDrawerToggle: () => void;
+}
+
+interface NewRoutineRecord {
+  routine: Routine;
+  daySelectorOptions: Partial<DaySelector>[];
 }
 
 /** renders new routine on drawer */
@@ -17,24 +23,26 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
     formState: { errors },
     control,
     getValues,
-  } = useForm<Routine>({
+  } = useForm<NewRoutineRecord>({
     defaultValues: {
-      summary: "",
-      details: "",
-      occurrenceType: undefined,
-      // daysOfWeek: [
-      //   { label: "Sunday", abbreviatedLabel: "Sun", selected: false },
-      //   { label: "Monday", abbreviatedLabel: "Mon", selected: false },
-      //   { label: "Tuesday", abbreviatedLabel: "Tue", selected: false },
-      //   { label: "Wednesday", abbreviatedLabel: "Wed", selected: false },
-      //   { label: "Thursday", abbreviatedLabel: "Thurs", selected: false },
-      //   { label: "Friday", abbreviatedLabel: "Fri", selected: false },
-      //   { label: "Saturday", abbreviatedLabel: "Sat", selected: false },
-      // ],
+      routine: {
+        summary: "",
+        details: "",
+        occurrenceType: undefined,
+      },
+      daySelectorOptions: [
+        { label: "Sunday", abbreviatedLabel: "Sun", selected: false },
+        { label: "Monday", abbreviatedLabel: "Mon", selected: false },
+        { label: "Tuesday", abbreviatedLabel: "Tue", selected: false },
+        { label: "Wednesday", abbreviatedLabel: "Wed", selected: false },
+        { label: "Thursday", abbreviatedLabel: "Thurs", selected: false },
+        { label: "Friday", abbreviatedLabel: "Fri", selected: false },
+        { label: "Saturday", abbreviatedLabel: "Sat", selected: false },
+      ],
     },
   });
 
-  const eventType = useWatch({ control, name: "occurrenceType" });
+  const eventType = useWatch({ control, name: "routine.occurrenceType" });
 
   const utils = api.useContext();
   const createRoutine = api.routines.create.useMutation({
@@ -44,51 +52,43 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
     },
   });
 
-  const onSubmit: SubmitHandler<Routine> = (formData) => {
+  const onSubmit: SubmitHandler<NewRoutineRecord> = (formData) => {
     // clean up artifacts, if a user first clicks one event type and made some selections those selections remain
-    switch (formData.occurrenceType) {
+    switch (formData.routine.occurrenceType) {
       case "DAY_OF_WEEK":
-        formData.dayOfMonth = null;
+        formData.routine.dayOfMonth = null;
         break;
       case "DAY_OF_MONTH":
-        // formData.daysOfWeek?.forEach((day) => (day.selected = false));
+        formData.daySelectorOptions?.forEach((day) => (day.selected = false));
         break;
       case "SPECIFIC_DAY":
-        // formData.daysOfWeek?.forEach((day) => (day.selected = false));
-        formData.dayOfMonth = null;
+        formData.daySelectorOptions?.forEach((day) => (day.selected = false));
+        formData.routine.dayOfMonth = null;
         break;
     }
 
-    // remove abbreviatedLabel
-    formData;
-
     createRoutine.mutate({
-      summary: formData.summary,
-      details: formData.details,
-      occurrenceType: formData.occurrenceType,
-      startDateTime: formData.startDateTime,
-      endDateTime: formData.endDateTime ?? undefined,
+      summary: formData.routine.summary,
+      details: formData.routine.details,
+      occurrenceType: formData.routine.occurrenceType,
+      startDateTime: startOfDay(formData.routine.startDateTime),
+      endDateTime: formData.routine.endDateTime
+        ? startOfDay(formData.routine.endDateTime)
+        : undefined,
+      daysOfWeek:
+        formData.routine.occurrenceType === "DAY_OF_WEEK"
+          ? formData.daySelectorOptions.map((daySelector) => {
+              return {
+                label: daySelector.label as string,
+                selected: daySelector.selected as boolean,
+              };
+            })
+          : undefined,
     });
   };
 
   return (
     <div id="new-routine" className="px-4">
-      <div className="flex justify-between">
-        <button
-          className="flex items-center gap-1 rounded border-2 border-black px-4 py-2 text-xl"
-          onClick={() => setDrawerForm("Selector")}>
-          <HiArrowLeft />
-          Back
-        </button>
-        <button
-          type="submit"
-          form="new-routine-form"
-          className="flex items-center gap-1 rounded bg-black px-4 py-2 text-2xl text-white">
-          Save
-          <HiPlus />
-        </button>
-      </div>
-
       <form
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(onSubmit)}
@@ -98,7 +98,7 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
           <label className="text-2xl">Summary</label>
           <input
             type="text"
-            {...register("summary", {
+            {...register("routine.summary", {
               required: "Field is required",
               minLength: {
                 value: 2,
@@ -111,15 +111,17 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
             })}
             autoFocus
           />
-          {errors.summary && (
-            <span className="text-red-400">{errors.summary.message}</span>
+          {errors.routine?.summary && (
+            <span className="text-red-400">
+              {errors.routine.summary.message}
+            </span>
           )}
         </div>
 
         <div className="flex flex-col">
           <label className="text-2xl">Details</label>
           <textarea
-            {...register("details", {
+            {...register("routine.details", {
               required: "Field is required",
               minLength: {
                 value: 5,
@@ -131,15 +133,19 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
               },
             })}
           />
-          {errors.details && (
-            <span className="text-red-400">{errors.details.message}</span>
+          {errors.routine?.details && (
+            <span className="text-red-400">
+              {errors.routine.details.message}
+            </span>
           )}
         </div>
 
         <div className="flex flex-col">
           <label className="text-2xl">Occurrence type</label>
           <select
-            {...register("occurrenceType", { required: "Field is required" })}>
+            {...register("routine.occurrenceType", {
+              required: "Field is required",
+            })}>
             <option value="">Make selection</option>
             <option value="DAY_OF_WEEK">Occurs weekly by day(s)</option>
             <option value="DAY_OF_MONTH">Occurs monthly by day</option>
@@ -147,30 +153,32 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
               Once, on specific day/date range
             </option>
           </select>
-          {errors.occurrenceType && (
+          {errors.routine?.occurrenceType && (
             <span className="text-red-400">
-              {errors.occurrenceType.message}
+              {errors.routine.occurrenceType.message}
             </span>
           )}
         </div>
 
         {/* TODO: minor bug occurs sometimes where the validation isn't retriggered on selection. It happens some of the time which leads me to believe it is a bug in react-hook-from 
         To recreate the bug submit the form and then select one of the items and see that validation isn't retriggered until the form is submitted again. But, if you toggle individual items after that the validation occurs as it should*/}
-        {/* {eventType === "DAY_OF_WEEK" && (
+        {eventType === "DAY_OF_WEEK" && (
           <div className="flex flex-col items-center">
             <div className="flex gap-2">
-              {getValues("daysOfWeek")?.map((day, index) => (
+              {getValues("daySelectorOptions")?.map((day, index) => (
                 <div key={day.label}>
                   <input
                     type="checkbox"
                     className="peer hidden"
                     id={`daysOfWeek.${index}.selected`}
-                    {...register(`daysOfWeek.${index}.selected`, {
+                    {...register(`daySelectorOptions.${index}.selected`, {
                       validate: {
                         isAtLeastOneDaySelected: () => {
                           return (
                             eventType === "DAY_OF_WEEK" &&
-                            getValues("daysOfWeek")?.some((day) => day.selected)
+                            getValues("daySelectorOptions")?.some(
+                              (day) => day.selected
+                            )
                           );
                         },
                       },
@@ -202,18 +210,18 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
                 // </button>
               ))}
             </div>
-            {errors.daysOfWeek && (
+            {errors.daySelectorOptions && (
               <span className="text-red-400">
                 Please select at least one day
               </span>
             )}
           </div>
-        )} */}
+        )}
 
         {eventType == "DAY_OF_MONTH" && (
           <div className="flex flex-col">
             <select
-              {...register("dayOfMonth", {
+              {...register("routine.dayOfMonth", {
                 required: "Field is required",
               })}>
               <option value="">Make a selection</option>
@@ -221,7 +229,7 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
               <option value="MIDDLE">Middle of month</option>
               <option value="LAST">Last day of month</option>
             </select>
-            {errors.dayOfMonth && (
+            {errors.routine?.dayOfMonth && (
               <span className="text-red-400">Field is required</span>
             )}
           </div>
@@ -232,14 +240,14 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
             <label className="text-2xl">Starting</label>
             <input
               type="date"
-              {...register("startDateTime", {
+              {...register("routine.startDateTime", {
                 required: "Field is required",
                 valueAsDate: true,
               })}
             />
-            {errors.startDateTime && (
+            {errors.routine?.startDateTime && (
               <span className="text-red-400">
-                {errors.startDateTime.message}
+                {errors.routine.startDateTime.message}
               </span>
             )}
           </div>
@@ -250,18 +258,26 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
             </label>
             <input
               type="date"
-              {...register("endDateTime", { valueAsDate: true })}
+              {...register("routine.endDateTime", { valueAsDate: true })}
             />
-            {errors.endDateTime && (
-              <span className="text-red-400">{errors.endDateTime.message}</span>
+            {errors.routine?.endDateTime && (
+              <span className="text-red-400">
+                {errors.routine.endDateTime.message}
+              </span>
             )}
           </div>
         </div>
 
-        <div className="flex w-full justify-end">
+        <div className="fixed bottom-0 left-0 right-0 flex justify-between p-4">
+          <button
+            className="flex items-center gap-1 rounded border-2 border-black px-4 py-2 text-xl"
+            onClick={() => setDrawerForm("Selector")}>
+            <HiArrowLeft />
+            Back
+          </button>
           <button
             type="submit"
-            className="flex items-center gap-1 rounded bg-black px-4 py-2 text-2xl text-white">
+            className="flex items-center gap-1 rounded bg-red-600 px-4 py-2 text-2xl text-white">
             Save
             <HiPlus />
           </button>

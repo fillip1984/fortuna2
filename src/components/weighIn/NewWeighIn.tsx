@@ -7,6 +7,7 @@ import { type WeighIn } from "@prisma/client";
 import { api } from "~/utils/api";
 import Goal from "./Goal";
 import { type NewItemDrawerProps } from "../nav/BottomNav";
+import { startOfDay } from "~/utils/date";
 
 export default function NewWeighIn({
   setDrawerForm,
@@ -37,7 +38,7 @@ export default function NewWeighIn({
 
   const onSubmit: SubmitHandler<WeighIn> = (formData) => {
     createWeighIn.mutate({
-      date: formData.date,
+      date: startOfDay(formData.date),
       weight: Number(formData.weight.toString()),
       bodyFatPercentage: formData.bodyFatPercentage
         ? Number(formData.bodyFatPercentage?.toString())

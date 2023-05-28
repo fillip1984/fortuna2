@@ -2,11 +2,11 @@ import {
   type BloodPressureCategory,
   type BloodPressureReading,
 } from "@prisma/client";
-import { differenceInCalendarDays } from "date-fns";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { prisma } from "~/server/db";
+import { differenceInCalendarDays } from "~/utils/date";
 
 export const BloodPressureReadingRouter = createTRPCRouter({
   create: publicProcedure

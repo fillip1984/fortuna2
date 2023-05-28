@@ -7,6 +7,7 @@ import { HiArrowLeft, HiPlus } from "react-icons/hi2";
 import { IoCalendarClearSharp } from "react-icons/io5";
 import { api } from "~/utils/api";
 import { type DrawerFormOptions } from "../nav/BottomNav";
+import { startOfDay } from "~/utils/date";
 
 interface NewRoutineProps {
   setDrawerForm: React.Dispatch<React.SetStateAction<DrawerFormOptions>>;
@@ -35,7 +36,7 @@ export default function NewBloodPressureReading({
 
   const onSubmit: SubmitHandler<BloodPressureReading> = (formData) => {
     createBloodPressureReading.mutate({
-      date: formData.date,
+      date: startOfDay(formData.date),
       systolic: formData.systolic,
       diastolic: formData.diastolic,
       pulse: formData.pulse ? formData.pulse : undefined,
