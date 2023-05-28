@@ -4,29 +4,20 @@ import { HiArrowLeft, HiPlus } from "react-icons/hi2";
 import { IoCalendarClearSharp, IoScaleSharp } from "react-icons/io5";
 
 import { type WeighIn } from "@prisma/client";
-import { api } from "~/utils/api";
-import Goal from "./Goal";
-import { type NewItemDrawerProps } from "../nav/BottomNav";
 import { startOfDay } from "date-fns";
+import { api } from "~/utils/api";
+import { type NewItemDrawerProps } from "../nav/BottomNav";
+import Goal from "./Goal";
 
 export default function NewWeighIn({
   setDrawerForm,
   handleDrawerToggle,
 }: NewItemDrawerProps) {
-  // const weighInSchema = z.object({
-  //   date: z.date(),
-  //   weight: z.number(),
-  //   bodyFatPercentage: z.number().optional(),
-  // });
-  // type WeighInSchemaType = z.infer<typeof weighInSchema>;
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<WeighIn>({
-    // resolver: zodResolver(weighInSchema),
-  });
+  } = useForm<WeighIn>();
 
   const utils = api.useContext();
   const createWeighIn = api.weighIns.create.useMutation({
