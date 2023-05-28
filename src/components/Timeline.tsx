@@ -6,6 +6,7 @@ import WeighInCard from "./weighIn/WeighInCard";
 const Timeline = () => {
   const { data: timeline } = api.timeline.get.useQuery();
   const { data: goal } = api.goals.getGoal.useQuery();
+  const { data: routines } = api.routines.readForToday.useQuery();
 
   return (
     <>
