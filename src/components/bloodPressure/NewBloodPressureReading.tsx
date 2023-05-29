@@ -52,10 +52,10 @@ export default function NewBloodPressureReading({
         noValidate>
         <div>
           <label className="relative block text-gray-400 focus-within:text-gray-600">
-            <IoCalendarClearSharp className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
+            <IoCalendarClearSharp className="form-input-icon" />
             <input
               type="date"
-              className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
+              className="form-icon-prefix"
               {...register("date", {
                 required: "Field is required",
                 valueAsDate: true,
@@ -71,12 +71,12 @@ export default function NewBloodPressureReading({
         {/*  TODO: couldn't figure out how to require decimal only, you can type in letters and I can't stop it! */}
         <div>
           <label className="relative block text-gray-400 focus-within:text-gray-600">
-            <GiHearts className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
+            <GiHearts className="form-input-icon" />
             <input
               type="number"
               inputMode="numeric"
               placeholder="120 Systolic/upper number (mmHg)"
-              className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
+              className="form-icon-prefix"
               {...register("systolic", {
                 required: "Field is required",
                 valueAsNumber: true,
@@ -91,12 +91,12 @@ export default function NewBloodPressureReading({
         {/*  TODO: couldn't figure out how to require decimal only, you can type in letters and I can't stop it! */}
         <div>
           <label className="relative block text-gray-400 focus-within:text-gray-600">
-            <GiNestedHearts className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
+            <GiNestedHearts className="form-input-icon" />
             <input
               type="number"
               inputMode="numeric"
               placeholder="80 Diastolic/lower number (mmHg)"
-              className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
+              className="form-icon-prefix"
               {...register("diastolic", {
                 required: "Field is required",
                 valueAsNumber: true,
@@ -110,12 +110,12 @@ export default function NewBloodPressureReading({
 
         <div>
           <label className="relative block text-gray-400 focus-within:text-gray-600">
-            <BsHeartPulseFill className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
+            <BsHeartPulseFill className="form-input-icon" />
             <input
               type="number"
               inputMode="numeric"
               placeholder="70 Pulse (BPM)"
-              className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
+              className="form-icon-prefix"
               {...register("pulse", { valueAsNumber: true })}
             />
           </label>

@@ -31,9 +31,29 @@
     @apply cursor-not-allowed;
   }
 
-  input,
-  select,
-  textarea {
-    @apply text-black;
+  [type="text"],
+  [type="email"],
+  [type="url"],
+  [type="password"],
+  [type="number"],
+  [type="date"],
+  [type="datetime-local"],
+  [type="month"],
+  [type="search"],
+  [type="tel"],
+  [type="time"],
+  [type="week"],
+  [multiple],
+  textarea,
+  select {
+    @apply w-full appearance-none rounded bg-white py-3 text-black placeholder-gray-400 focus:border-gray-300 focus:ring-gray-500;
+  }
+
+  .form-icon-prefix {
+    @apply pl-14;
+  }
+
+  .form-input-icon {
+    @apply pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform;
   }
 }

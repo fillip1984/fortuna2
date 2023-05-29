@@ -46,10 +46,10 @@ export default function NewWeighIn({
         noValidate>
         <div>
           <label className="relative block text-gray-400 focus-within:text-gray-600">
-            <IoCalendarClearSharp className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
+            <IoCalendarClearSharp className="form-input-icon" />
             <input
               type="date"
-              className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
+              className="form-icon-prefix"
               {...register("date", {
                 required: "Field is required",
                 valueAsDate: true,
@@ -65,12 +65,12 @@ export default function NewWeighIn({
         {/*  TODO: couldn't figure out how to require decimal only, you can type in letters and I can't stop it! */}
         <div>
           <label className="relative block text-gray-400 focus-within:text-gray-600">
-            <IoScaleSharp className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
+            <IoScaleSharp className="form-input-icon" />
             <input
               type="number"
               inputMode="decimal"
               placeholder="192.2"
-              className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
+              className="form-icon-prefix"
               {...register("weight", {
                 required: "Field is required",
                 valueAsNumber: true,
@@ -84,12 +84,12 @@ export default function NewWeighIn({
 
         <div>
           <label className="relative block text-gray-400 focus-within:text-gray-600">
-            <GiBiceps className="pointer-events-none absolute left-3 top-1/2 h-8 w-8 -translate-y-1/2 transform" />
+            <GiBiceps className="form-input-icon" />
             <input
               type="number"
               inputMode="decimal"
               placeholder="24.2"
-              className="form-input block w-full appearance-none rounded border border-gray-900 bg-white px-4 py-3 pl-14 text-black placeholder-gray-400 focus:outline-none"
+              className="form-icon-prefix"
               {...register("bodyFatPercentage", {
                 setValueAs: (v: string) => (v === "" ? undefined : parseInt(v)),
               })}
