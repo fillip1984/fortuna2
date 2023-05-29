@@ -26,4 +26,23 @@ export const RoutineOutcomeRouter = createTRPCRouter({
       });
       return result;
     }),
+  readOne: publicProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.routineOutcome.findUnique({
+        where: { id: input.id },
+        include: {
+          routine: true,
+        },
+      });
+    }),
+  delete: publicProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.routineOutcome.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });

@@ -13,7 +13,7 @@ export default function RoutineOutcomeCard({
 }) {
   return (
     <Link
-      href={`/routines/${outcome.routineId}`}
+      href={`/routines/${outcome.routine.id}/outcomes/${outcome.id}`}
       key={outcome.id}
       className="my-2 flex flex-col rounded-lg">
       <div className="flex items-center gap-2 rounded-t-lg bg-red-500 p-2 text-white">

@@ -27,7 +27,8 @@
     @apply bg-zinc-800 p-4 text-white;
   }
 
-  input:read-only {
+  input:read-only,
+  textarea:read-only {
     @apply cursor-not-allowed;
   }
 
