@@ -75,6 +75,7 @@ const NewRoutine = ({ setDrawerForm, handleDrawerToggle }: NewRoutineProps) => {
       endDateTime: formData.routine.endDateTime
         ? startOfDay(formData.routine.endDateTime)
         : undefined,
+      dayOfMonth: formData.routine.dayOfMonth ?? undefined,
       daysOfWeek:
         formData.routine.occurrenceType === "DAY_OF_WEEK"
           ? formData.daySelectorOptions.map((daySelector) => {

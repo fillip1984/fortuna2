@@ -1,9 +1,20 @@
-import { type WeighIn, type BloodPressureReading } from "@prisma/client";
+import {
+  type BloodPressureReading,
+  type Routine,
+  type WeighIn,
+} from "@prisma/client";
+import {
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  isFirstDayOfMonth,
+  isLastDayOfMonth,
+} from "date-fns";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 type TimelineEntry = {
-  type: "WeighIn" | "BloodPressureReading";
-  event: WeighIn | BloodPressureReading;
+  type: "WeighIn" | "BloodPressureReading" | "Routine";
+  event: WeighIn | BloodPressureReading | Routine;
 };
 
 type TimelineEvent = {
@@ -42,6 +53,15 @@ export const TimelineRouter = createTRPCRouter({
         // },
       });
 
+    const routines = await ctx.prisma.routine.findMany({
+      orderBy: {
+        startDateTime: "desc",
+      },
+      include: {
+        daysOfWeek: true,
+      },
+    });
+
     // const goal = await ctx.prisma.goal.findFirst();
     // const goalWeight = goal?.weight.toNumber();
 
@@ -60,6 +80,14 @@ export const TimelineRouter = createTRPCRouter({
         .forEach((date) => uniqueDatesAsNumbers.add(date.getTime()));
     }
 
+    if (routines) {
+      routines.map((routine) => {
+        eachDayOfInterval({
+          start: routine.startDateTime,
+          end: routine.endDateTime ?? endOfMonth(new Date()),
+        }).forEach((date) => uniqueDatesAsNumbers.add(date.getTime()));
+      });
+    }
     const uniqueDates: Date[] = [];
     uniqueDatesAsNumbers.forEach((value) => {
       uniqueDates.push(new Date(value));
@@ -89,6 +117,36 @@ export const TimelineRouter = createTRPCRouter({
           timelineEntry.entries.push({
             type: "BloodPressureReading",
             event: bpr,
+          });
+        });
+
+      routines
+        .filter((routine) => {
+          if (routine.occurrenceType === "SPECIFIC_DAY") {
+            return (
+              timelineEntry.date.getTime() === routine.startDateTime.getTime()
+            );
+          } else if (routine.occurrenceType === "DAY_OF_MONTH") {
+            return (
+              (routine.dayOfMonth === "FIRST" &&
+                isFirstDayOfMonth(timelineEntry.date)) ||
+              (routine.dayOfMonth === "MIDDLE" &&
+                timelineEntry.date.getDay() === 15) ||
+              (routine.dayOfMonth === "LAST" &&
+                isLastDayOfMonth(timelineEntry.date))
+            );
+          } else if (routine.occurrenceType === "DAY_OF_WEEK") {
+            // return routine.daysOfWeek[getDay(timelineEntry.date)]?.selected;
+            return routine.daysOfWeek.find(
+              (dayOfWeek) =>
+                dayOfWeek.label === format(timelineEntry.date, "EEEE")
+            )?.selected;
+          }
+        })
+        .forEach((routine) => {
+          timelineEntry.entries.push({
+            type: "Routine",
+            event: routine,
           });
         });
 

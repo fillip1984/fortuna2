@@ -1,7 +1,12 @@
-import { type BloodPressureReading, type WeighIn } from "@prisma/client";
+import {
+  type Routine,
+  type BloodPressureReading,
+  type WeighIn,
+} from "@prisma/client";
 import { api } from "~/utils/api";
 import BloodPressureReadingCard from "./bloodPressure/BloodPressureReadingCard";
 import WeighInCard from "./weighIn/WeighInCard";
+import RoutineCard from "./routine/RoutineCard";
 
 const Timeline = () => {
   const { data: timeline } = api.timeline.get.useQuery();
@@ -36,8 +41,18 @@ const Timeline = () => {
                       bloodPressureReading={entry.event as BloodPressureReading}
                     />
                   );
+                } else if (entry.type === "Routine") {
+                  return (
+                    <RoutineCard
+                      key={entry.event.id}
+                      routine={entry.event as Routine}
+                    />
+                  );
                 } else {
-                  throw Error("Unknown event");
+                  throw Error(
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    `Unknown event, cannot render event of: ${entry.type}`
+                  );
                 }
               })}
             </div>

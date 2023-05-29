@@ -1,4 +1,4 @@
-import { OccurrenceType } from "@prisma/client";
+import { DayOfMonthType, OccurrenceType } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { startOfDay } from "date-fns";
@@ -12,6 +12,7 @@ export const RoutineRouter = createTRPCRouter({
         occurrenceType: z.nativeEnum(OccurrenceType),
         startDateTime: z.date(),
         endDateTime: z.date().nullish(),
+        dayOfMonth: z.nativeEnum(DayOfMonthType).optional(),
         daysOfWeek: z
           .array(
             z.object({
@@ -30,6 +31,7 @@ export const RoutineRouter = createTRPCRouter({
           occurrenceType: input.occurrenceType,
           startDateTime: input.startDateTime,
           endDateTime: input.endDateTime,
+          dayOfMonth: input.dayOfMonth,
           daysOfWeek: {
             ...(input.daysOfWeek
               ? {
