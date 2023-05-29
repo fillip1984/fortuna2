@@ -22,6 +22,40 @@ export const RoutineRouter = createTRPCRouter({
           .nullish(),
       })
     )
+    //TODO: figure this out
+    // .mutation(async ({ ctx, input }) => {
+    //   const result = await ctx.prisma.routine.create({
+    //     data: {
+    //       summary: input.summary,
+    //       details: input.details,
+    //       occurrenceType: input.occurrenceType,
+    //       startDateTime: input.startDateTime,
+    //       endDateTime: input.endDateTime,
+    //       dayOfMonth: input.dayOfMonth,
+    //     },
+    //   });
+
+    //   if (input.daysOfWeek) {
+    //     {
+    //       input.daysOfWeek.forEach((dayOfWeek) => {
+    //         void ctx.prisma.daySelector.create({
+    //           data: {
+    //             label: dayOfWeek.label,
+    //             abbreviatedLabel: "xxx",
+    //             selected: dayOfWeek.selected,
+    //             routine: {
+    //               connect: {
+    //                 id: result.id,
+    //               },
+    //             },
+    //           },
+    //         });
+    //       });
+    //     }
+    //   }
+
+    //   return result;
+    // }),
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.prisma.routine.create({
         data: {
