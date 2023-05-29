@@ -1,7 +1,6 @@
 import { DayOfMonthType, OccurrenceType } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { startOfDay } from "date-fns";
 
 export const RoutineRouter = createTRPCRouter({
   create: publicProcedure
@@ -51,37 +50,37 @@ export const RoutineRouter = createTRPCRouter({
       });
       return result;
     }),
-  readAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.routine.findMany();
-  }),
-  readForToday: publicProcedure.query(({ ctx }) => {
-    const today = startOfDay(new Date());
+  // readAll: publicProcedure.query(({ ctx }) => {
+  //   return ctx.prisma.routine.findMany();
+  // }),
+  // readForToday: publicProcedure.query(({ ctx }) => {
+  //   const today = startOfDay(new Date());
 
-    return ctx.prisma.routine.findMany({
-      where: {
-        OR: [
-          {
-            startDateTime: {
-              lte: today,
-            },
-            AND: {
-              endDateTime: {
-                gte: today,
-              },
-            },
-          },
-          {
-            startDateTime: {
-              lte: today,
-            },
-            AND: {
-              endDateTime: {
-                equals: today,
-              },
-            },
-          },
-        ],
-      },
-    });
-  }),
+  //   return ctx.prisma.routine.findMany({
+  //     where: {
+  //       OR: [
+  //         {
+  //           startDateTime: {
+  //             lte: today,
+  //           },
+  //           AND: {
+  //             endDateTime: {
+  //               gte: today,
+  //             },
+  //           },
+  //         },
+  //         {
+  //           startDateTime: {
+  //             lte: today,
+  //           },
+  //           AND: {
+  //             endDateTime: {
+  //               equals: today,
+  //             },
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   });
+  // }),
 });

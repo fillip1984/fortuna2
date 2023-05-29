@@ -1,6 +1,7 @@
 import {
   type BloodPressureReading,
   type Routine,
+  type RoutineOutcome,
   type WeighIn,
 } from "@prisma/client";
 import {
@@ -13,8 +14,14 @@ import {
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 type TimelineEntry = {
-  type: "WeighIn" | "BloodPressureReading" | "Routine";
-  event: WeighIn | BloodPressureReading | Routine;
+  type: "WeighIn" | "BloodPressureReading" | "Routine" | "RoutineOutcome";
+  event:
+    | WeighIn
+    | BloodPressureReading
+    | Routine
+    | (RoutineOutcome & {
+        routine: Routine;
+      });
 };
 
 type TimelineEvent = {
@@ -62,8 +69,14 @@ export const TimelineRouter = createTRPCRouter({
       },
     });
 
-    // const goal = await ctx.prisma.goal.findFirst();
-    // const goalWeight = goal?.weight.toNumber();
+    const routineOutcomes = await ctx.prisma.routineOutcome.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        routine: true,
+      },
+    });
 
     // fold in the cheese
     const timeline: TimelineEvent[] = [];
@@ -88,6 +101,13 @@ export const TimelineRouter = createTRPCRouter({
         }).forEach((date) => uniqueDatesAsNumbers.add(date.getTime()));
       });
     }
+
+    if (routineOutcomes) {
+      routineOutcomes
+        .map((outcome) => outcome.createdAt)
+        .forEach((date) => uniqueDatesAsNumbers.add(date.getTime()));
+    }
+
     const uniqueDates: Date[] = [];
     uniqueDatesAsNumbers.forEach((value) => {
       uniqueDates.push(new Date(value));
@@ -147,6 +167,18 @@ export const TimelineRouter = createTRPCRouter({
           timelineEntry.entries.push({
             type: "Routine",
             event: routine,
+          });
+        });
+
+      routineOutcomes
+        .filter(
+          (outcome) =>
+            outcome.createdAt.getTime() === timelineEntry.date.getTime()
+        )
+        .forEach((outcome) => {
+          timelineEntry.entries.push({
+            type: "RoutineOutcome",
+            event: outcome,
           });
         });
 

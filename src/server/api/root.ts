@@ -1,9 +1,10 @@
 import { createTRPCRouter } from "~/server/api/trpc";
-import { GoalRouter } from "./routers/GoalRouter";
-import { WeighInRouter } from "./routers/WeighInRouter";
-import { TimelineRouter } from "./routers/TimelineRouter";
 import { BloodPressureReadingRouter } from "./routers/BloodPressureReadingRouter";
+import { GoalRouter } from "./routers/GoalRouter";
+import { RoutineOutcomeRouter } from "./routers/RoutineOutcomeRouter";
 import { RoutineRouter } from "./routers/RoutineRouter";
+import { TimelineRouter } from "./routers/TimelineRouter";
+import { WeighInRouter } from "./routers/WeighInRouter";
 
 /**
  * This is the primary router for your server.
@@ -14,6 +15,7 @@ export const appRouter = createTRPCRouter({
   bloodPressureReadings: BloodPressureReadingRouter,
   goals: GoalRouter,
   routines: RoutineRouter,
+  routineOutcomes: RoutineOutcomeRouter,
   timeline: TimelineRouter,
   weighIns: WeighInRouter,
 });

@@ -1,8 +1,49 @@
 import { type Routine } from "@prisma/client";
+import { type MouseEvent } from "react";
 import Link from "next/link";
 
 import { HiCalendarDays } from "react-icons/hi2";
-export default function RoutineCard({ routine }: { routine: Routine }) {
+import { api } from "~/utils/api";
+import { useRouter } from "next/router";
+export default function RoutineCard({
+  routine,
+  routineDate,
+}: {
+  routine: Routine;
+  routineDate: Date;
+}) {
+  const router = useRouter();
+  const utils = api.useContext();
+  const completeRoutine = api.routineOutcomes.create.useMutation({
+    onSuccess: async () => {
+      await utils.routineOutcomes.invalidate();
+      void router.push("/");
+    },
+  });
+  const handleComplete = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    completeRoutine.mutate({
+      date: routineDate,
+      routineId: routine.id,
+      routineName: routine.summary,
+      status: "COMPLETE",
+    });
+  };
+
+  const handleSkip = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
+    completeRoutine.mutate({
+      date: routineDate,
+      routineId: routine.id,
+      routineName: routine.summary,
+      status: "SKIPPED",
+    });
+  };
+
   return (
     <Link
       href={`/routines/${routine.id}`}
@@ -15,10 +56,16 @@ export default function RoutineCard({ routine }: { routine: Routine }) {
         {routine.summary}
         <span className="text-sm">{routine.details}</span>
         <div className="mt-8 flex justify-around">
-          <button className="h-full w-full rounded-bl bg-green-700 p-4">
+          <button
+            type="button"
+            onClick={handleComplete}
+            className="h-full w-full rounded-bl bg-green-700 p-4">
             Complete
           </button>
-          <button className="h-full w-full rounded-br bg-red-700 p-4">
+          <button
+            type="button"
+            onClick={handleSkip}
+            className="h-full w-full rounded-br bg-red-700 p-4">
             Skip
           </button>
         </div>

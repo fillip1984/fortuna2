@@ -59,16 +59,17 @@ enum BloodPressureCategory {
 }
 
 model Routine {
-    id             String          @id @default(cuid())
-    createdAt      DateTime        @default(now())
-    updatedAt      DateTime        @updatedAt
-    summary        String
-    details        String
-    occurrenceType OccurrenceType
-    daysOfWeek     DaySelector[]
-    dayOfMonth     DayOfMonthType?
-    startDateTime  DateTime
-    endDateTime    DateTime?
+    id              String           @id @default(cuid())
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    summary         String
+    details         String
+    occurrenceType  OccurrenceType
+    daysOfWeek      DaySelector[]
+    dayOfMonth      DayOfMonthType?
+    startDateTime   DateTime
+    endDateTime     DateTime?
+    routineOutcomes RoutineOutcome[]
 }
 
 model DaySelector {
@@ -78,7 +79,7 @@ model DaySelector {
     label            String
     abbreviatedLabel String
     selected         Boolean
-    Routine          Routine? @relation(fields: [routineId], references: [id])
+    routine          Routine? @relation(fields: [routineId], references: [id])
     routineId        String?
 }
 
@@ -88,15 +89,24 @@ enum OccurrenceType {
     SPECIFIC_DAY
 }
 
-enum EventStatus {
-    NOT_COMPLETE
-    SKIPPED
-    COMPLETE
-    OVERDUE
-}
-
 enum DayOfMonthType {
     FIRST
     MIDDLE
     LAST
+}
+
+model RoutineOutcome {
+    id        String               @id @default(cuid())
+    createdAt DateTime             @default(now())
+    updatedAt DateTime             @updatedAt
+    status    RoutineOutcomeStatus
+    routine   Routine              @relation(fields: [routineId], references: [id])
+    routineId String
+}
+
+enum RoutineOutcomeStatus {
+    NOT_COMPLETE
+    SKIPPED
+    COMPLETE
+    OVERDUE
 }

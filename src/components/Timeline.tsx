@@ -1,17 +1,18 @@
 import {
-  type Routine,
+  type RoutineOutcome,
   type BloodPressureReading,
+  type Routine,
   type WeighIn,
 } from "@prisma/client";
 import { api } from "~/utils/api";
 import BloodPressureReadingCard from "./bloodPressure/BloodPressureReadingCard";
-import WeighInCard from "./weighIn/WeighInCard";
 import RoutineCard from "./routine/RoutineCard";
+import WeighInCard from "./weighIn/WeighInCard";
+import RoutineOutcomeCard from "./routine/RoutineOutcomeCard";
 
 const Timeline = () => {
   const { data: timeline } = api.timeline.get.useQuery();
   const { data: goal } = api.goals.getGoal.useQuery();
-  const { data: routines } = api.routines.readForToday.useQuery();
 
   return (
     <>
@@ -46,6 +47,19 @@ const Timeline = () => {
                     <RoutineCard
                       key={entry.event.id}
                       routine={entry.event as Routine}
+                      routineDate={timelineEvent.date}
+                    />
+                  );
+                } else if (entry.type === "RoutineOutcome") {
+                  return (
+                    <RoutineOutcomeCard
+                      key={entry.event.id}
+                      outcome={
+                        entry.event as RoutineOutcome & {
+                          routine: Routine;
+                        }
+                      }
+                      outcomeDate={timelineEvent.date}
                     />
                   );
                 } else {
