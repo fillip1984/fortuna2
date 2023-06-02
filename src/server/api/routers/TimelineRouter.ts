@@ -24,7 +24,7 @@ type TimelineEntry = {
       });
 };
 
-type TimelineEvent = {
+type TimelinePoint = {
   date: Date;
   entries: TimelineEntry[];
 };
@@ -79,7 +79,7 @@ export const TimelineRouter = createTRPCRouter({
     });
 
     // fold in the cheese
-    const timeline: TimelineEvent[] = [];
+    const timeline: TimelinePoint[] = [];
     const uniqueDatesAsNumbers = new Set<number>();
     if (weighIns) {
       weighIns
@@ -118,23 +118,23 @@ export const TimelineRouter = createTRPCRouter({
     });
 
     sortedUniqueDates.forEach((uniqueDate) => {
-      const timelineEntry: TimelineEvent = {
+      const timelinePoint: TimelinePoint = {
         date: uniqueDate,
         entries: [],
       };
 
       weighIns
         .filter(
-          (weighIn) => weighIn.date.getTime() === timelineEntry.date.getTime()
+          (weighIn) => weighIn.date.getTime() === timelinePoint.date.getTime()
         )
         .forEach((weighIn) => {
-          timelineEntry.entries.push({ type: "WeighIn", event: weighIn });
+          timelinePoint.entries.push({ type: "WeighIn", event: weighIn });
         });
 
       bloodPressureReadings
-        .filter((bpr) => bpr.date.getTime() === timelineEntry.date.getTime())
+        .filter((bpr) => bpr.date.getTime() === timelinePoint.date.getTime())
         .forEach((bpr) => {
-          timelineEntry.entries.push({
+          timelinePoint.entries.push({
             type: "BloodPressureReading",
             event: bpr,
           });
@@ -144,27 +144,27 @@ export const TimelineRouter = createTRPCRouter({
         .filter((routine) => {
           if (routine.occurrenceType === "SPECIFIC_DAY") {
             return (
-              timelineEntry.date.getTime() === routine.startDateTime.getTime()
+              timelinePoint.date.getTime() === routine.startDateTime.getTime()
             );
           } else if (routine.occurrenceType === "DAY_OF_MONTH") {
             return (
               (routine.dayOfMonth === "FIRST" &&
-                isFirstDayOfMonth(timelineEntry.date)) ||
+                isFirstDayOfMonth(timelinePoint.date)) ||
               (routine.dayOfMonth === "MIDDLE" &&
-                timelineEntry.date.getDay() === 15) ||
+                timelinePoint.date.getDay() === 15) ||
               (routine.dayOfMonth === "LAST" &&
-                isLastDayOfMonth(timelineEntry.date))
+                isLastDayOfMonth(timelinePoint.date))
             );
           } else if (routine.occurrenceType === "DAY_OF_WEEK") {
-            // return routine.daysOfWeek[getDay(timelineEntry.date)]?.selected;
+            // return routine.daysOfWeek[getDay(timelinePoint.date)]?.selected;
             return routine.daysOfWeek.find(
               (dayOfWeek) =>
-                dayOfWeek.label === format(timelineEntry.date, "EEEE")
+                dayOfWeek.label === format(timelinePoint.date, "EEEE")
             )?.selected;
           }
         })
         .forEach((routine) => {
-          timelineEntry.entries.push({
+          timelinePoint.entries.push({
             type: "Routine",
             event: routine,
           });
@@ -173,18 +173,18 @@ export const TimelineRouter = createTRPCRouter({
       routineOutcomes
         .filter(
           (outcome) =>
-            outcome.createdAt.getTime() === timelineEntry.date.getTime()
+            outcome.createdAt.getTime() === timelinePoint.date.getTime()
         )
         .forEach((outcome) => {
-          timelineEntry.entries.push({
+          timelinePoint.entries.push({
             type: "RoutineOutcome",
             event: outcome,
           });
         });
 
-      timeline.push(timelineEntry);
+      timeline.push(timelinePoint);
     });
 
-    return timeline;
+    return timeline.filter((timelinePoint) => timelinePoint.entries.length > 0);
   }),
 });
